@@ -16,7 +16,7 @@ trait GetsServiceProviderTrait
         $providers = $this->laravel->getProviders(SingletonDiscoveryServiceProvider::class);
 
         if (empty($providers)) {
-            throw new \Exception("No instances of SingletonDiscoveryServiceProvider are registed.");
+            throw new \Exception("No instances of SingletonDiscoveryServiceProvider are registered.");
         }
 
         return reset($providers);
