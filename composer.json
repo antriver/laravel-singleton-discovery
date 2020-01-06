@@ -1,0 +1,24 @@
+{
+    "name": "antriver/laravel-singleton-discovery",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anthony Kuske",
+            "homepage": "https://anthonykuske.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Antriver\\LaravelSingletonDiscovery\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Antriver\\LaravelSingletonDiscoveryTests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.1",
+        "laravel/framework": "5.*.*|6.*.*"
+    }
+}
