@@ -3,10 +3,13 @@
 namespace Antriver\LaravelSingletonDiscovery\Console;
 
 use Antriver\LaravelSingletonDiscovery\SingletonDiscoveryServiceProvider;
+use Antriver\LaravelSingletonDiscovery\Traits\GetsServiceProviderTrait;
 use Illuminate\Console\Command;
 
 class SingletonCacheCommand extends Command
 {
+    use GetsServiceProviderTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -30,8 +33,7 @@ class SingletonCacheCommand extends Command
     {
         $this->call('singleton:clear');
 
-        /** @var SingletonDiscoveryServiceProvider $provider */
-        $provider = $this->laravel->getProviders(SingletonDiscoveryServiceProvider::class);
+        $provider = $this->getSingletonDiscoveryServiceProvider();
 
         file_put_contents(
             $provider->getCachedSingletonsPath(),

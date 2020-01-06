@@ -3,11 +3,14 @@
 namespace Antriver\LaravelSingletonDiscovery\Console;
 
 use Antriver\LaravelSingletonDiscovery\SingletonDiscoveryServiceProvider;
+use Antriver\LaravelSingletonDiscovery\Traits\GetsServiceProviderTrait;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 
 class SingletonClearCommand extends Command
 {
+    use GetsServiceProviderTrait;
+
     /**
      * The console command name.
      *
@@ -52,8 +55,7 @@ class SingletonClearCommand extends Command
      */
     public function handle()
     {
-        /** @var SingletonDiscoveryServiceProvider $provider */
-        $provider = $this->laravel->getProviders(SingletonDiscoveryServiceProvider::class);
+        $provider = $this->getSingletonDiscoveryServiceProvider();
 
         $this->files->delete($provider->getCachedSingletonsPath());
 
