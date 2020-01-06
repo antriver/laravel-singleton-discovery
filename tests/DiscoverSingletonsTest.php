@@ -14,7 +14,7 @@ class DiscoverSingletonsTest extends TestCase
         $result = DiscoverSingletons::within(
             $directory,
             __DIR__.'/Fixtures',
-            'Antriver\LaravelSingletonDiscoveryTests\\Fixtures'
+            'Antriver\LaravelSingletonDiscoveryTests\Fixtures'
         );
 
         $this->assertEquals(
@@ -34,7 +34,7 @@ class DiscoverSingletonsTest extends TestCase
         $result = DiscoverSingletons::within(
             $directory,
             __DIR__.'/Fixtures',
-            'Antriver\LaravelSingletonDiscoveryTests\\Fixtures'
+            'Antriver\LaravelSingletonDiscoveryTests\Fixtures'
         );
 
         $this->assertEquals(
