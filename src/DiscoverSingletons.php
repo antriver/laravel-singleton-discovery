@@ -10,43 +10,43 @@ use Symfony\Component\Finder\Finder;
 class DiscoverSingletons
 {
     /**
-     * Get all of the events and listeners by searching the given listener directory.
+     * Get all of the events and listeners by searching the given directory.
      *
-     * @param string $listenerPath
+     * @param string $path
      * @param string $basePath
+     * @param string $baseNamespace
      *
      * @return array
      */
-    public static function within($listenerPath, $basePath)
+    public static function within(string $path, string $basePath, string $baseNamespace)
     {
         return collect(
-            static::getListenerEvents(
-                (new Finder)->files()->in($listenerPath),
-                $basePath
+            static::getSingletonClasses(
+                (new Finder)->files()->in($path),
+                $basePath,
+                $baseNamespace
             )
-        )->mapToDictionary(
-            function ($event, $listener) {
-                return [$event => $listener];
-            }
         )->all();
     }
 
     /**
      * Get all of the listeners and their corresponding events.
      *
-     * @param iterable $classes
+     * @param SplFileInfo[]|iterable $classes
      * @param string $basePath
      *
-     * @return array
+     * @param string $baseNamespace
+     *
+     * @return string[]
      */
-    protected static function getListenerEvents($classes, $basePath)
+    protected static function getSingletonClasses($classes, string $basePath, string $baseNamespace)
     {
         $singletonClasses = [];
 
         foreach ($classes as $class) {
-            $reflection = new ReflectionClass(
-                static::classFromFile($class, $basePath)
-            );
+            $className = static::getClassNameFromFile($class, $basePath, $baseNamespace);
+
+            $reflection = new ReflectionClass($className);
 
             if (!$reflection->isSubclassOf(SingletonInterface::class)) {
                 continue;
@@ -67,17 +67,24 @@ class DiscoverSingletons
      *
      * @param \SplFileInfo $file
      * @param string $basePath
+     * @param string $baseNamespace
      *
      * @return string
      */
-    protected static function classFromFile(SplFileInfo $file, $basePath)
+    protected static function getClassNameFromFile(SplFileInfo $file, string $basePath, string $baseNamespace): string
     {
-        $class = trim(Str::replaceFirst($basePath, '', $file->getRealPath()), DIRECTORY_SEPARATOR);
+        // Remove the basePath from the file's absolute path to get its path relative to the app root.
+        $relativePath = trim(Str::replaceFirst($basePath, '', $file->getRealPath()), DIRECTORY_SEPARATOR);
 
-        return str_replace(
-            [DIRECTORY_SEPARATOR, ucfirst(basename(app()->path())).'\\'],
-            ['\\', app()->getNamespace()],
-            ucfirst(Str::replaceLast('.php', '', $class))
-        );
+        // Replace directory separators with namespace separators.
+        $className = str_replace(DIRECTORY_SEPARATOR, '\\', $relativePath);
+
+        // Class name relative to root namespace.
+        $className = ucfirst(Str::replaceLast('.php', '', $className));
+
+        // Add the root namespace.
+        $className = $baseNamespace.'\\'.$className;
+
+        return $className;
     }
 }
