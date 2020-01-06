@@ -2,10 +2,27 @@
 
 namespace Antriver\LaravelSingletonDiscovery;
 
+use Antriver\LaravelSingletonDiscovery\Console\SingletonCacheCommand;
+use Antriver\LaravelSingletonDiscovery\Console\SingletonClearCommand;
 use Illuminate\Support\ServiceProvider;
 
 class SingletonDiscoveryServiceProvider extends ServiceProvider
 {
+    /**
+     * Bootstrap the application services.
+     */
+    public function boot()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands(
+                [
+                    SingletonCacheCommand::class,
+                    SingletonClearCommand::class,
+                ]
+            );
+        }
+    }
+
     public function register()
     {
         foreach ($this->getSingletons() as $class) {
