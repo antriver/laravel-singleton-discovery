@@ -63,7 +63,7 @@ class SingletonDiscoveryServiceProvider extends ServiceProvider
                 function ($discovered, $directory) {
                     return array_merge_recursive(
                         $discovered,
-                        DiscoverSingletons::within($directory, $this->app->basePath(), $this->app->getNamespace())
+                        DiscoverSingletons::within($directory, $this->app->path(), $this->app->getNamespace())
                     );
                 },
                 []
